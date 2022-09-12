@@ -23,30 +23,25 @@ def checkTrendCont(newCandle,lastCandle):
     else:
         return 'True'
 
-def checkTouch(candle,res,sup):
-    if candle['trend'] == 'bull':
-        if candle['high'] > res:
-            return 'True'
-
-    if candle['trned'] == 'bear':
-        if candle['low'] < sup:
-            return 'True'
-    else :
-        return 'False'
 
 def getLastTrendCandle(array):
     lastCandle = array[0]
-    LastTrendCandle = {'open': float,
-            'close': float,
-            'top': float,
-            'low': float,
-            'volume': float,
-            'trend': "",
-            'type': "",
-            'times':""}
     i = 0
-    while array[i] == lastCandle['trend']:
-        LastTrendCandle = array[i]
+    while array[i]['trend'] == lastCandle['trend']:
         i =+ 1
-        print(f'last candle is {LastTrendCandle}')
-    return LastTrendCandle
+        break 
+    return array[i]
+
+def getLevel(array):
+        newCandle = array[0]
+        oldCandle = array[1]
+    #higher volume same trend
+        if checkTrendCont(newCandle,oldCandle):
+            lastCandle = getLastTrendCandle(array)
+            return lastCandle['open']
+    #higher volume diff trend
+        else :
+            if newCandle['trend'] == 'bull':
+                return newCandle['open']
+            else:
+                return newCandle['close']

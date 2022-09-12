@@ -1,43 +1,38 @@
+from hashlib import new
 import methods
-import levelMaker
-def analyze(array,sups,ress):
+from datetime import datetime
+
+def analyze(array):
+
     #start by getting mas
     avgVolume = methods.getAvgVolume(array,20)
-    sma = methods.getSma(array,20)
     newCandle = array[0]
     lastCandle = array[1]
 
-
-    #new 1.5 avg vol or new candle 2x last candle
-    #newCandle['volume'] > 1.5*avgVolume
-    if newCandle['volume'] > 1.3*avgVolume or newCandle['volume']>1.5*lastCandle['volume'] or newCandle['volume']<0.6*lastCandle['volume']:
+    #new candle 2x > last candle
         
-        if methods.checkTrendCont:
-            #last candle trend low ==  sup/res
-            lastTrendCandle = methods.getLastTrendCandle(array)
-            if lastTrendCandle['trend'] == 'bull':
-                levelMaker.getSupport(lastTrendCandle,sups)
-                print('get sup')
-            if lastTrendCandle['trend'] == 'bear':
-                levelMaker.getResistance(lastTrendCandle,ress)
-                print('get res')
-        else:
-            if newCandle['trend'] == 'bull':
-                levelMaker.getSupport(newCandle,sups)
-                print('get sup')
-            if newCandle['trend'] == 'bear':
-                levelMaker.getResistance(newCandle,ress)
-                print('get res')
+    #new candle 2x < last candle
+    #if newCandle['volume']*2 < lastCandle['volume']:
+    
+    #new candle 1.5 > avgVolume
+    #if newCandle['volume'] > 1.5*avgVolume:
 
-    #touch and close above/belo last entry
-    if newCandle['trend'] != lastCandle['trend']:
-        if newCandle['trend'] == 'bull':
-                if newCandle['close']*1.05 > lastCandle['open']:
-                    if methods.checkTouch :
-                        print('position entry')
+    if newCandle['volume'] > 2*lastCandle['volume'] and newCandle['volume']> 1.2*avgVolume:
+        newLevel = methods.getLevel(array)
+        return ["True",'getLevel',newLevel]
 
-        if newCandle['trend'] == 'bear':
-           if newCandle['close']*0.95 > lastCandle['open']:
-                print('new resistance')
-                if methods.checkTouch :
-                    print('position entry')
+
+    #new candle close bellow/above last candle entry LOW VOL
+    if newCandle['trend'] == 'bull':
+        if newCandle['close'] > lastCandle['open']:
+                func = 'openLong'
+                touchPrice = lastCandle['low']
+                return ["True",func,touchPrice]
+
+    if newCandle['trend'] == 'bear':
+        if newCandle['close'] < lastCandle['open']:
+                func = 'openShort'
+                touchPrice = lastCandle['top']
+                return ["True",func,touchPrice]
+    else:
+        return ["False",""]
