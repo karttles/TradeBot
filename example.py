@@ -1,7 +1,6 @@
 import  json
 import websocket
 import candleMaker
-#import resMaker
 
 
 symbol = "btcusdt"
@@ -19,7 +18,7 @@ def on_message(ws, message):
     if is_candle_closed:
         c = candleMaker.addCandel(can,array)
         array.append(c)
-        print(array[0]['type'])
+        print(array[0])
 
 def on_error(ws, error):
     print(f"Error: {error}")
