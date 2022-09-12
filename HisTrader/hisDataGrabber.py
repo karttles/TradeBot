@@ -11,11 +11,12 @@ resolution = '60'
 start_time = int(datetime.now().timestamp() - 1296000)
 historical = requests.get(f'https://ftx.com/api/markets/{symbol}/candles?resolution=900&start_time={start_time}').json()
 his_candles = historical['result']
-print(his_candles[0])
 
 peeps = []
 suportLevels = []
 resistanceLevels = []
+buyOrders = []
+selOrders = []
 
 for candle in his_candles:
     candle = candleMaker_FTX.addCandel(candle,peeps)
